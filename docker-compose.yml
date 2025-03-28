@@ -1,0 +1,100 @@
+version: "3.8"
+
+services:
+  # ========================= User Service =========================
+  user-service:
+    build: 
+      context: ./UserService
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./UserService/.env
+    depends_on:
+      - mongodb
+    networks:
+      - backend
+
+  # ========================= Event Service =========================
+  event-service:
+    build: 
+      context: ./EventService
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002"
+    env_file:
+      - ./EventService/.env
+    depends_on:
+      - mongodb
+    networks:
+      - backend
+
+  # ========================= Booking Service =========================
+  booking-service:
+    build: 
+      context: ./BookingService
+      dockerfile: Dockerfile
+    ports:
+      - "5003:5003"
+    env_file:
+      - ./BookingService/.env
+    depends_on:
+      - mongodb
+    networks:
+      - backend
+
+  # ========================= Notification Service =========================
+  notification-service:
+    build: 
+      context: ./NotificationService
+      dockerfile: Dockerfile
+    ports:
+      - "5004:5004"
+    env_file:
+      - ./NotificationService/.env
+    depends_on:
+      - mongodb
+    networks:
+      - backend
+
+  # ========================= User Client Service (React App) =========================
+  user-client-service:
+    build:
+      context: ./UserService/user-client-service
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    depends_on:
+      - user-service
+    networks:
+      - frontend
+
+  # ========================= MongoDB (Database) =========================
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - backend
+
+  # ========================= RabbitMQ (Message Broker) =========================
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - backend
+
+# ========================= Volumes =========================
+volumes:
+  mongo-data:
+
+# ========================= Networks =========================
+networks:
+  backend:
+  frontend:

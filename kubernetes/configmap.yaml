@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: event-booking-config
+  namespace: event-booking
+data:
+  MONGO_URI: "mongodb://mongo:27017/event-booking"
+  RABBITMQ_HOST: "rabbitmq"
+  JWT_SECRET: "supersecretkey"

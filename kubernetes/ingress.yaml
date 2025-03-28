@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: event-booking-ingress
+  namespace: event-booking
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: eventbooking.local
+      http:
+        paths:
+          - path: /users
+            pathType: Prefix
+            backend:
+              service:
+                name: user-service
+                port:
+                  number: 5000
+          - path: /events
+            pathType: Prefix
+            backend:
+              service:
+                name: event-service
+                port:
+                  number: 5001
+          - path: /bookings
+            pathType: Prefix
+            backend:
+              service:
+                name: booking-service
+                port:
+                  number: 5002
+          - path: /notifications
+            pathType: Prefix
+            backend:
+              service:
+                name: notification-service
+                port:
+                  number: 5003
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: user-client-service
+                port:
+                  number: 3001
